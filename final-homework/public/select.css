@@ -1,0 +1,94 @@
+.container{
+    height: 240px;
+    width: 600px;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    margin-top: 40px;
+}
+.select{
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+.introduction{
+    margin-left: 20px;
+    font-size: 23px;
+}
+.font{
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+.choice-des{
+    display: flex;
+    margin-left:10px;
+    padding-top:30px;
+}
+.departure, .destination{
+    padding:0px 10px 10px 10px;
+    margin-right: 10px;
+}
+.dep , .des{
+    padding:20px 30px;
+    font-size: 17px;
+    border:1px solid gray;
+    border-radius: 10px;
+}
+.datetime{
+    padding:19px 42px;
+    margin-left: 10px;
+    border:1px solid gray;
+    border-radius: 10px;
+    font-size: 17px;
+}
+.search{
+    margin-top: 10px;
+    display: flex;
+    justify-content: right;
+    margin-right: 25px;
+}
+.search2{
+    padding:18px 50px;
+    font-size: 15px;
+    border:1px solid gray;
+    border-radius: 10px;
+    background-color: rgb(255,95,16);
+    color:white;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.search2:hover{
+    background-color: rgb(211, 80, 15);
+}
+.forth{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 90px;
+}
+.pic-container{
+    display: flex;
+    justify-content: space-between;
+}
+.pic-type{
+    width: 200px;
+    border: 1px solid ;
+    border-radius:20px;
+    height: 200px;
+    padding: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.font2{
+    display: flex;
+    justify-content: right;
+    font-size: 20px;
+    margin-top: 0px;
+    margin-right: 5px;
+}
+.change{
+    display: flex;
+    flex-direction: column;
+    margin-right: 170px;
+}
+
