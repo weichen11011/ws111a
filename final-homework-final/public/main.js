@@ -104,7 +104,7 @@ async function home(){
                             </div>
                 
                             <div class="search">
-                                <button type="button" class="search2">訂購</button>
+                                <button type="button" class="search2">搜尋</button>
                             </div>
                         </div>
                     </div>
