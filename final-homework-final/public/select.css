@@ -46,10 +46,18 @@
     font-size: 17px;
 }
 .search{
+    margin-left: 450px;
     margin-top: 10px;
     display: flex;
-    justify-content: right;
+    justify-content: center;
+    align-items: center;
     margin-right: 25px;
+    font-size: 25px;
+    height: 50px;
+    width: 100px;
+    background-color: rgb(250, 164, 5);
+    border: 1px solid gray;
+    border-radius: 20px;
 }
 .search2{
     padding:18px 50px;

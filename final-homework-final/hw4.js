@@ -9,6 +9,9 @@ server.public("/public")
 server.router.get('/',home)
       .post('/sign',sign)
       .post('/login',login)
+      .post('/complete',complete)
+      .post('/change',show)
+      .get('/choice',choice)
 
 async function home(ctx) {
     ctx.response.redirect('/public/#home')
@@ -39,6 +42,42 @@ async function login(ctx){
   else{
     sendStatus(ctx, Status.Fail)
   }
-
 }
+
+async function complete(ctx){
+  let user = await ctx.state.session.get('user')
+   if (user == null) {
+    sendStatus(ctx, Status.Fail)
+    return
+  }else{
+    let params = await bodyParams(ctx)
+    console.log('params= ', params)
+    if (params.dep != "" && params.des != ""){
+      await db.userTicketAdd({departure:params.dep, destination:params.des, date:params.date})
+      sendStatus(ctx, Status.OK)
+    }
+    else{
+      sendStatus(ctx, Status.Fail)
+    }
+  }
+}
+
+async function show(ctx){
+  let ticket = await db.ticketGet()
+  console.log('ticket= ', ticket)
+  if (ticket == null) {
+    sendStatus(ctx, Status.Fail)
+  }else{
+    await ctx.state.session.set('des', ticket)
+    sendJson(ctx, ticket)
+  }
+  
+}
+
+async function choice(ctx){
+  const params = await bodyParams(ctx)
+  console.log('params= ', params)
+  sendJson(ctx, params)
+}
+
 await server.listen(8000)

@@ -1,0 +1,47 @@
+body{
+    margin:0px;
+    font-family: Arial,"微軟正黑體","Microsoft JhengHei","新細明體",PMingLiU,sans-serif,Calibri;
+}
+.header{
+    height: 55px;
+    background-color: gray;
+}
+.mid-section{
+    display: flex;
+    align-items: center;
+    margin-left: 70px;
+    margin-right: 35px;
+    justify-content: right;
+    height: 55px;
+}
+.top{
+    height: 80px;
+    background-color: #feffe2;
+}
+.right{
+    display: flex;
+    margin-right:200px;
+}
+.home , .login, .sign{
+    padding-right:30px;
+    font-size: 20px;
+}
+.login, .sign{
+    padding-top: 1px;
+}
+a{
+    color: white;
+}
+a:hover{
+    color:#f5f7c8;
+}
+.big-container{
+    display: flex;
+    flex-direction: column;
+}
+.third{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

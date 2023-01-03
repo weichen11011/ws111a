@@ -1,3 +1,4 @@
+
 // ========================= Ui ======================
 const Ui = {}
   Ui.one = function(path) {
@@ -27,7 +28,17 @@ window.onhashchange = async function(){
             break    
         case '#login':
             await login()
-            break     
+            break 
+        case '#complete':
+            await complete()
+            break
+        case '#change':
+            await show()
+            break   
+        case '#choice':
+            let id = tokens[1]
+            await choice(id)
+            break                
         default: 
             Ui.goto('#home'); 
             break
@@ -78,19 +89,18 @@ async function home(){
                 
                             <div class="choice-des">
                                 <div class="departure">
-                                    <select class="dep" name="啟程地">
+                                    <select class="dep" name="啟程地" id="departure">
                                         <option value="">啟程地</option>
                                         <option value="松山">松山</option>
                                         <option value="台中">台中</option>
                                         <option value="嘉義">嘉義</option>
                                         <option value="台南">台南</option>
                                         <option value="高雄">高雄</option>
-                                        <option value="澎湖">澎湖</option>
                                     </select>
                                 </div>
                 
-                                <div class="destination">
-                                    <select class="des" name="目的地">
+                                <div class="destination" >
+                                    <select class="des" name="目的地" id="destination">
                                         <option value="">目的地</option>
                                         <option value="澎湖">澎湖</option>
                                         <option value="金門">金門</option>
@@ -98,13 +108,13 @@ async function home(){
                                 </div>
                 
                                 <div class="date">
-                                    <input type="date" placeholder="出發日期" name="date"
+                                    <input type="date" placeholder="出發日期" name="date" id="date"
                                     class="datetime"/>
                                 </div>
                             </div>
                 
                             <div class="search">
-                                <button type="button" class="search2">搜尋</button>
+                                <a id="ticket" href="#complete">訂購</a>
                             </div>
                         </div>
                     </div>
@@ -282,6 +292,133 @@ async function serverlogin(){
         alert('帳號或密碼錯誤')
     }
 }
+
+
+async function complete(){
+    let dep = Ui.id('departure').value
+    let des = Ui.id('destination').value
+    let date = Ui.id('date').value
+
+    let r = await Server.post('/complete', {dep, des, date})
+    console.log('serverLogin: r=', r)
+
+    if (r.status == Status.OK){
+        alert('機票訂購完成!!!')
+        Ui.goto('#home')
+    }
+    else{
+        alert('請先登入!!!')
+        Ui.goto('#home')
+    }
+}
+
+async function show(tickets){
+    let r = await Server.post('/change',tickets)
+    let msgs = r.obj
+    let content = []
+    console.log('r = ',r)
+    for (let i = 0; i < msgs.length; i++){
+        content.push(`
+        <div class="container1">
+            <div class="font">
+                <p id="dep">${[msgs[i][1]]}</p>
+            </div>
+
+            <div class="font">
+                <p id="des" >${[msgs[i][2]]}</p>
+            </div>
+
+            <div class="font">
+                <p id="date" >${[msgs[i][3]]}</p>
+            </div>
+
+            <div>
+                <a id="show" href="#choice/${msgs[i][0]}" class="choice">選擇</a>
+            </div>
+        </div>
+    `)
+    }
+    if (r.status == Status.OK){
+        Ui.show(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>choice</title>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="choice.css">
+            <link rel="stylesheet" href="header1.css"/>
+        </head>
+    
+        <body>
+            <div class="big-container">
+                <div class="top">
+                </div>
+                <div class ="header">
+                    <div class = "mid-section">
+                        <div class = "right">
+                            <div class="home">
+                                <a id="home" href="#home">首頁</a>
+                            </div>
+                            <div class="login">
+                                <a id="login" href="#login">登入</a>
+                            </div>
+                            <div class="sign">
+                                <a id="sign" href="#sign">註冊</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="third">
+                    ${content.join("\n")}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </body>
+    </html>
+    `)
+    }
+    else{
+        alert('你還尚未訂購機票!!!')
+        Ui.goto('#home')
+    }
+    
+}
+
+async function choice(id){
+    id1 = 'dep'+id
+    id2 = 'des'+id
+    id3 = 'date'+id
+
+    let dep = Ui.id('dep').value
+    let des = Ui.id(id2).value
+    let date = Ui.id(id3).value
+
+    console.log(dep, id2, date)
+
+    Ui.show(`
+    <div class="container1">
+        <div class="font">
+            <p>${dep}</p>
+        </div>
+
+        <div class="font">
+            <p>${des}</p>
+        </div>
+
+        <div class="font">
+            <p>${date}</p>
+        </div>
+
+        <div >
+            <a id="show" href="#choice" class="choice">選擇</a>
+    </div>
+</div>
+    `)
+}
+    
+
+
 
 // ====================== Server ====================
 Server = {}
