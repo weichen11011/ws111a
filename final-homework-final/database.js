@@ -12,11 +12,7 @@ export async function open() {
                departure TEXT, destination TEXT , date TEXT)`)
 }
 
-export async function clear() {
-  db.query(`DELETE FROM users`)
-  db.query(`DELETE FROM says`)
-  db.query(`DELETE FROM follows`)
-}
+
 
 export async function close() {
   db.close()

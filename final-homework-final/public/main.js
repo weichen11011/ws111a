@@ -39,9 +39,13 @@ window.onhashchange = async function(){
             id = uriDecode(tokens[1])
             await choice(id)
             break
-        case '#scheulde':
-            await show()
-            break                     
+        case '#schedule':
+            await show2()
+            break
+        case '#chair':
+            id = uriDecode(tokens[1])
+            await chair(id)
+            break                        
         default: 
             Ui.goto('#home'); 
             break
@@ -126,14 +130,14 @@ async function home(){
                 <div class="forth">
                     <div class="pic-container">
                         <div class="change">
-                            <a id="change" href="#change">
+                            <a id="change" href="#schedule">
                                 <img src="./images.png" class="pic-type">
                             </a>
                             <p class="font2">線上劃位</p>
                         </div>
         
                         <div class="show">
-                            <a id="show" href="#scheulde">
+                            <a id="show" href="#change">
                                 <img src="./images2.png" class="pic-type">
                             </a>
                             <p class="font2">行程管理</p>
@@ -428,7 +432,7 @@ async function choice(id){
                         <div class="select">
             
                             <div class="introduction">
-                                <p class="font">我的登機證</p>
+                                <p class="font">行程規劃</p>
                             </div>
                 
                             <div class="destination">
@@ -472,6 +476,171 @@ async function choice(id){
     `)
 }
 
+async function show2(tickets){
+    let r = await Server.post('/schedule',tickets)
+    let msgs = r.obj
+    let content = []
+    console.log('r = ',r)
+    for (let i = 0; i < msgs.length; i++){
+        content.push(`
+        <div class="container1">
+            <div class="font">
+                <p id="dep">${msgs[i].des}</p>
+            </div>
+
+            <div class="font">
+                <p id="des" >${msgs[i].dep}</p>
+            </div>
+
+            <div class="font">
+                <p id="date" >${msgs[i].date}</p>
+            </div>
+
+            <div>
+                <a id="show" href="#chair/${msgs[i].id}" class="choice">劃位</a>
+            </div>
+        </div>
+    `)
+    }
+    if (r.status == Status.OK){
+        Ui.show(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>choice</title>
+            <meta charset="utf-8">
+            <link rel="stylesheet" href="choice.css">
+            <link rel="stylesheet" href="header1.css"/>
+        </head>
+    
+        <body>
+            <div class="big-container">
+                <div class="top">
+                </div>
+                <div class ="header">
+                    <div class = "mid-section">
+                        <div class = "right">
+                            <div class="home">
+                                <a id="home" href="#home">首頁</a>
+                            </div>
+                            <div class="login">
+                                <a id="login" href="#login">登入</a>
+                            </div>
+                            <div class="sign">
+                                <a id="sign" href="#sign">註冊</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="third">
+                    ${content.join("\n")}
+                    </div>
+                </div>
+                </div>
+            </div>
+        </body>
+    </html>
+    `)
+    }
+}
+
+async function chair(id){
+    const alphabet = "achk"
+    const num = Math.floor(Math.random() * 20)+1;
+    const randomCharacter = alphabet[Math.floor(Math.random() * alphabet.length)]
+    let chair = num.toString()+randomCharacter;
+    console.log(chair)
+    let r = await Server.get(`/chair/${id}`)
+    console.log('choice: r=', r)
+
+    let msg = r.obj
+    Ui.show(`
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <link rel="stylesheet" href="header.css"/>
+            <link rel="stylesheet" href="ticket.css"/>
+            <meta charset="utf-8">
+        </head>
+    
+        <body>
+            <div class="big-container">
+                <div class="top">
+                </div>
+                <div class ="header">
+                    <div class = "mid-section">
+                        <div class = "right">
+                            <div class="home">
+                                <a id="home" href="#home">首頁</a>
+                            </div>
+                            <div class="login">
+                                <a id="login" href="#login">登入</a>
+                            </div>
+                            <div class="sign">
+                                <a id="sign" href="#sign">註冊</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="third">
+                    <div class="container2">
+                        <div class="select">
+            
+                            <div class="introduction">
+                                <p class="font">我的登機證</p>
+                            </div>
+                
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>啟程地</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.des}</p>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>目的地</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.dep}</p>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>日期</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.date}</p>
+                                </div>
+                                
+                            </div>
+
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>座位</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${chair}</p>
+                                </div>
+                            
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+    `)
+}
 function uriDecode(line) {
     return (line == null)?null:decodeURIComponent(line)
   }
