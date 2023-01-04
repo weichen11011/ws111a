@@ -37,10 +37,18 @@ export async function ticketGet() {
   let tickets = []
   console.log(`ticketGet=${q}`)
   if (q.length <=0) return null
-  for (let a of q) {
-    tickets.push(a)
+  for (let [id, des, dep, date] of q) {
+    tickets.push({id, des, dep, date})
   }
   return tickets
+}
+
+export async function ticketGet2(user1) {
+  let q = db.query(`SELECT id, departure, destination, date FROM tickets WHERE id=?`, [user1])
+  console.log(`userGet(${user1})=${q}`)
+  if (q.length <=0) return null
+  let [id, des, dep, date] = q[0]
+  return {id, des, dep, date}
 }
 
 

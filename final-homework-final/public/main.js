@@ -36,9 +36,12 @@ window.onhashchange = async function(){
             await show()
             break   
         case '#choice':
-            let id = tokens[1]
+            id = uriDecode(tokens[1])
             await choice(id)
-            break                
+            break
+        case '#scheulde':
+            await show()
+            break                     
         default: 
             Ui.goto('#home'); 
             break
@@ -130,7 +133,7 @@ async function home(){
                         </div>
         
                         <div class="show">
-                            <a id="show" href="#show">
+                            <a id="show" href="#scheulde">
                                 <img src="./images2.png" class="pic-type">
                             </a>
                             <p class="font2">行程管理</p>
@@ -299,6 +302,7 @@ async function complete(){
     let des = Ui.id('destination').value
     let date = Ui.id('date').value
 
+    console.log(dep,des,date)
     let r = await Server.post('/complete', {dep, des, date})
     console.log('serverLogin: r=', r)
 
@@ -321,19 +325,19 @@ async function show(tickets){
         content.push(`
         <div class="container1">
             <div class="font">
-                <p id="dep">${[msgs[i][1]]}</p>
+                <p id="dep">${msgs[i].des}</p>
             </div>
 
             <div class="font">
-                <p id="des" >${[msgs[i][2]]}</p>
+                <p id="des" >${msgs[i].dep}</p>
             </div>
 
             <div class="font">
-                <p id="date" >${[msgs[i][3]]}</p>
+                <p id="date" >${msgs[i].date}</p>
             </div>
 
             <div>
-                <a id="show" href="#choice/${msgs[i][0]}" class="choice">選擇</a>
+                <a id="show" href="#choice/${msgs[i].id}" class="choice">選擇</a>
             </div>
         </div>
     `)
@@ -386,37 +390,91 @@ async function show(tickets){
 }
 
 async function choice(id){
-    id1 = 'dep'+id
-    id2 = 'des'+id
-    id3 = 'date'+id
 
-    let dep = Ui.id('dep').value
-    let des = Ui.id(id2).value
-    let date = Ui.id(id3).value
+    let r = await Server.get(`/choice/${id}`)
+    console.log('choice: r=', r)
 
-    console.log(dep, id2, date)
-
+    let msg = r.obj
     Ui.show(`
-    <div class="container1">
-        <div class="font">
-            <p>${dep}</p>
-        </div>
-
-        <div class="font">
-            <p>${des}</p>
-        </div>
-
-        <div class="font">
-            <p>${date}</p>
-        </div>
-
-        <div >
-            <a id="show" href="#choice" class="choice">選擇</a>
-    </div>
-</div>
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <link rel="stylesheet" href="header.css"/>
+            <link rel="stylesheet" href="ticket.css"/>
+            <meta charset="utf-8">
+        </head>
+    
+        <body>
+            <div class="big-container">
+                <div class="top">
+                </div>
+                <div class ="header">
+                    <div class = "mid-section">
+                        <div class = "right">
+                            <div class="home">
+                                <a id="home" href="#home">首頁</a>
+                            </div>
+                            <div class="login">
+                                <a id="login" href="#login">登入</a>
+                            </div>
+                            <div class="sign">
+                                <a id="sign" href="#sign">註冊</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="third">
+                    <div class="container2">
+                        <div class="select">
+            
+                            <div class="introduction">
+                                <p class="font">我的登機證</p>
+                            </div>
+                
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>啟程地</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.des}</p>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>目的地</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.dep}</p>
+                                </div>
+                                
+                            </div>
+    
+                            <div class="destination">
+                                <div class="font1">
+                                    <p>日期</p>
+                                </div>
+                                
+                                <div class="font1">
+                                    <p>${msg.date}</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
     `)
 }
-    
+
+function uriDecode(line) {
+    return (line == null)?null:decodeURIComponent(line)
+  }
 
 
 

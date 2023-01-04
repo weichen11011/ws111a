@@ -11,7 +11,7 @@ server.router.get('/',home)
       .post('/login',login)
       .post('/complete',complete)
       .post('/change',show)
-      .get('/choice',choice)
+      .get('/choice/:id',choice)
 
 async function home(ctx) {
     ctx.response.redirect('/public/#home')
@@ -75,9 +75,9 @@ async function show(ctx){
 }
 
 async function choice(ctx){
-  const params = await bodyParams(ctx)
-  console.log('params= ', params)
-  sendJson(ctx, params)
+  let user = await db.ticketGet2(ctx.params['id'])
+  console.log(user)
+  sendJson(ctx, user)
 }
 
 await server.listen(8000)
